@@ -3,7 +3,7 @@
  * Plugin Name: MW Travel
  * Plugin URI: https://mataramweb.com
  * Description: Plugin untuk Custom Post Type MW Travel dengan itinerary, gallery, include/exclude untuk travel agents. Compatible dengan Astra Theme.
- * Version: 1.0.0
+ * Version: 2.0.0
  * Author: Mataram Web
  * Author URI: https://mataramweb.com
  * Text Domain: mw-travel
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('MW_TRAVEL_VERSION', '1.0.0');
+define('MW_TRAVEL_VERSION', '2.0.0');
 define('MW_TRAVEL_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('MW_TRAVEL_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('MW_TRAVEL_PLUGIN_FILE', __FILE__);
@@ -206,34 +206,54 @@ function mw_travel_plugin_init() {
 }
 
 // Start the plugin
-mw_travel_plugin_init();
+add_action('plugins_loaded', 'mw_travel_plugin_init', 5);
 
 /**
  * Activation hook
  */
 register_activation_hook(__FILE__, 'mw_travel_activate');
 function mw_travel_activate() {
-    // Include required files
-    if (!class_exists('MW_Travel_Custom_Post_Type')) {
-        require_once plugin_dir_path(__FILE__) . 'includes/class-custom-post-type.php';
-    }
-    if (!class_exists('MW_Travel_Taxonomy')) {
-        require_once plugin_dir_path(__FILE__) . 'includes/class-taxonomy.php';
-    }
-    if (!class_exists('MW_Travel_Reviews')) {
-        require_once plugin_dir_path(__FILE__) . 'includes/class-reviews.php';
+    // Don't do anything if already activated
+    if (get_option('mw_travel_activated')) {
+        return;
     }
     
-    // Create reviews table first
-    $reviews = new MW_Travel_Reviews();
-    $reviews->create_table();
+    // Include class files safely
+    $includes = array(
+        'class-custom-post-type.php',
+        'class-taxonomy.php',
+        'class-reviews.php'
+    );
+    
+    foreach ($includes as $file) {
+        $filepath = plugin_dir_path(__FILE__) . 'includes/' . $file;
+        if (file_exists($filepath)) {
+            require_once $filepath;
+        }
+    }
+    
+    // Create database table for reviews
+    if (class_exists('MW_Travel_Reviews')) {
+        $reviews = new MW_Travel_Reviews();
+        if (method_exists($reviews, 'create_table')) {
+            $reviews->create_table();
+        }
+    }
     
     // Register post type and taxonomy
-    $cpt = new MW_Travel_Custom_Post_Type();
-    $tax = new MW_Travel_Taxonomy();
+    if (class_exists('MW_Travel_Custom_Post_Type')) {
+        $cpt = new MW_Travel_Custom_Post_Type();
+    }
+    
+    if (class_exists('MW_Travel_Taxonomy')) {
+        $tax = new MW_Travel_Taxonomy();
+    }
     
     // Flush rewrite rules
     flush_rewrite_rules();
+    
+    // Mark as activated
+    update_option('mw_travel_activated', true);
 }
 
 /**
@@ -243,4 +263,7 @@ register_deactivation_hook(__FILE__, 'mw_travel_deactivate');
 function mw_travel_deactivate() {
     // Flush rewrite rules
     flush_rewrite_rules();
+    
+    // Remove activation flag
+    delete_option('mw_travel_activated');
 }
