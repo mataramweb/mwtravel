@@ -7,6 +7,10 @@
     
     $(document).ready(function() {
         
+        // Debug log
+        console.log('MW Travel Admin JS loaded');
+        console.log('wp.media available:', typeof wp !== 'undefined' && typeof wp.media !== 'undefined');
+        
         // Itinerary functionality
         let itineraryIndex = $('#mw-itinerary-list .mw-itinerary-item').length;
         
@@ -55,6 +59,15 @@
         $('#mw-add-gallery').on('click', function(e) {
             e.preventDefault();
             
+            console.log('Gallery button clicked');
+            
+            // Check if wp.media is available
+            if (typeof wp === 'undefined' || typeof wp.media === 'undefined') {
+                alert('WordPress Media Library tidak tersedia. Pastikan Anda berada di halaman edit post.');
+                console.error('wp.media is not defined');
+                return;
+            }
+            
             // If the media frame already exists, reopen it.
             if (galleryFrame) {
                 galleryFrame.open();
@@ -62,51 +75,83 @@
             }
             
             // Create the media frame.
-            galleryFrame = wp.media({
-                title: 'Pilih atau Upload Gambar',
-                button: {
-                    text: 'Tambahkan ke Gallery'
-                },
-                multiple: true
-            });
-            
-            // When images are selected, run a callback.
-            galleryFrame.on('select', function() {
-                const selection = galleryFrame.state().get('selection');
-                const currentIds = $('#mw_travel_gallery').val();
-                const idsArray = currentIds ? currentIds.split(',') : [];
-                
-                selection.map(function(attachment) {
-                    attachment = attachment.toJSON();
-                    
-                    // Add ID to array if not already present
-                    if (idsArray.indexOf(attachment.id.toString()) === -1) {
-                        idsArray.push(attachment.id);
-                        
-                        // Add thumbnail to container
-                        const imgHtml = '<div class="mw-gallery-item" data-id="' + attachment.id + '">' +
-                            '<img src="' + (attachment.sizes.thumbnail ? attachment.sizes.thumbnail.url : attachment.url) + '" alt="">' +
-                            '<button type="button" class="mw-remove-gallery-item">&times;</button>' +
-                            '</div>';
-                        
-                        $('#mw-gallery-container').append(imgHtml);
+            try {
+                galleryFrame = wp.media({
+                    title: 'Pilih atau Upload Gambar',
+                    button: {
+                        text: 'Tambahkan ke Gallery'
+                    },
+                    multiple: true,
+                    library: {
+                        type: 'image'
                     }
                 });
                 
-                // Update hidden field
-                $('#mw_travel_gallery').val(idsArray.join(','));
-            });
-            
-            // Finally, open the modal.
-            galleryFrame.open();
+                console.log('Gallery frame created');
+                
+                // When images are selected, run a callback.
+                galleryFrame.on('select', function() {
+                    console.log('Images selected');
+                    
+                    const selection = galleryFrame.state().get('selection');
+                    const currentIds = $('#mw_travel_gallery').val();
+                    const idsArray = currentIds ? currentIds.split(',').filter(id => id !== '') : [];
+                    
+                    console.log('Current IDs:', idsArray);
+                    
+                    selection.map(function(attachment) {
+                        attachment = attachment.toJSON();
+                        
+                        console.log('Processing attachment:', attachment.id);
+                        
+                        // Add ID to array if not already present
+                        if (idsArray.indexOf(attachment.id.toString()) === -1) {
+                            idsArray.push(attachment.id);
+                            
+                            // Get thumbnail URL
+                            let thumbUrl = attachment.url;
+                            if (attachment.sizes && attachment.sizes.thumbnail) {
+                                thumbUrl = attachment.sizes.thumbnail.url;
+                            } else if (attachment.sizes && attachment.sizes.medium) {
+                                thumbUrl = attachment.sizes.medium.url;
+                            }
+                            
+                            // Add thumbnail to container
+                            const imgHtml = '<div class="mw-gallery-item" data-id="' + attachment.id + '">' +
+                                '<img src="' + thumbUrl + '" alt="">' +
+                                '<button type="button" class="mw-remove-gallery-item">&times;</button>' +
+                                '</div>';
+                            
+                            $('#mw-gallery-container').append(imgHtml);
+                            console.log('Added image to gallery:', attachment.id);
+                        }
+                    });
+                    
+                    // Update hidden field
+                    $('#mw_travel_gallery').val(idsArray.join(','));
+                    console.log('Updated gallery IDs:', idsArray.join(','));
+                });
+                
+                // Finally, open the modal.
+                galleryFrame.open();
+                console.log('Gallery frame opened');
+                
+            } catch (error) {
+                console.error('Error creating gallery frame:', error);
+                alert('Terjadi error: ' + error.message);
+            }
         });
         
         // Remove gallery item
         $(document).on('click', '.mw-remove-gallery-item', function(e) {
             e.preventDefault();
             
+            console.log('Remove gallery item clicked');
+            
             const $item = $(this).closest('.mw-gallery-item');
             const imageId = $item.data('id');
+            
+            console.log('Removing image ID:', imageId);
             
             // Remove from display
             $item.fadeOut(300, function() {
@@ -114,12 +159,13 @@
                 
                 // Update hidden field
                 const currentIds = $('#mw_travel_gallery').val();
-                const idsArray = currentIds.split(',');
+                const idsArray = currentIds ? currentIds.split(',') : [];
                 const newIds = idsArray.filter(function(id) {
-                    return id != imageId;
+                    return id != '' && id != imageId;
                 });
                 
                 $('#mw_travel_gallery').val(newIds.join(','));
+                console.log('Updated gallery IDs after removal:', newIds.join(','));
             });
         });
         
