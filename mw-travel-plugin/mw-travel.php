@@ -86,6 +86,9 @@ class MW_Travel_Plugin {
         // Initialize taxonomy
         new MW_Travel_Taxonomy();
         
+        // Initialize reviews
+        new MW_Travel_Reviews();
+        
         // Load text domain
         load_plugin_textdomain('mw-travel', false, dirname(plugin_basename(__FILE__)) . '/languages');
     }
