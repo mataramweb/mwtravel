@@ -69,10 +69,17 @@ if (function_exists('mw_travel_output_schema')) {
                 <!-- Include/Exclude -->
                 <?php mw_travel_display_include_exclude(); ?>
                 
-                <!-- Reviews & Rating -->
-                <?php if (function_exists('mw_travel_display_reviews')) : ?>
-                    <?php mw_travel_display_reviews(); ?>
-                <?php endif; ?>
+                <!-- WordPress Comments (for Reviews) -->
+                <?php
+                if (comments_open() || get_comments_number()) :
+                    ?>
+                    <div id="comments" class="mw-travel-comments-section">
+                        <h3><?php _e('Ulasan & Komentar', 'mw-travel'); ?></h3>
+                        <?php comments_template(); ?>
+                    </div>
+                    <?php
+                endif;
+                ?>
                 
                 <!-- Contact/Booking Section -->
                 <div class="mw-travel-booking-section">
