@@ -223,6 +223,11 @@ function mw_travel_display_include_exclude() {
  * Display reviews and rating
  */
 function mw_travel_display_reviews() {
+    // Check if class exists
+    if (!class_exists('MW_Travel_Reviews')) {
+        return;
+    }
+    
     global $post;
     $reviews_class = new MW_Travel_Reviews();
     $rating_data = $reviews_class->get_average_rating($post->ID);
