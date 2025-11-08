@@ -242,7 +242,4 @@ register_deactivation_hook(__FILE__, 'mw_travel_deactivate');
 function mw_travel_deactivate() {
     // Flush rewrite rules
     flush_rewrite_rules();
-    
-    // Remove activation flag
-    delete_option('mw_travel_activated');
 }
