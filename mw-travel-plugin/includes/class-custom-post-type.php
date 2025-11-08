@@ -55,13 +55,13 @@ class MW_Travel_Custom_Post_Type {
             'show_ui'            => true,
             'show_in_menu'       => true,
             'query_var'          => true,
-            'rewrite'            => array('slug' => 'travel'),
+            'rewrite'            => array('slug' => 'tour'),
             'capability_type'    => 'post',
             'has_archive'        => true,
             'hierarchical'       => false,
             'menu_position'      => 5,
             'menu_icon'          => 'dashicons-palmtree',
-            'supports'           => array('title', 'editor', 'thumbnail', 'excerpt', 'author'),
+            'supports'           => array('title', 'editor', 'thumbnail', 'excerpt', 'author', 'comments'),
             'show_in_rest'       => true,
         );
         
