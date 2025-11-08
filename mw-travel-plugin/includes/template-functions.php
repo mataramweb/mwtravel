@@ -131,25 +131,30 @@ function mw_travel_display_itinerary() {
     ?>
     <div class="mw-travel-itinerary">
         <h3><?php _e('Itinerary', 'mw-travel'); ?></h3>
-        <?php foreach ($itinerary as $day) : ?>
-            <div class="mw-itinerary-day">
-                <div class="day-header">
-                    <span class="day-number"><?php echo esc_html($day['day_number']); ?></span>
-                    <h4 class="day-title"><?php echo esc_html($day['title']); ?></h4>
+        <div class="mw-accordion-itinerary">
+            <?php foreach ($itinerary as $index => $day) : ?>
+                <div class="accordion-item <?php echo $index === 0 ? 'active' : ''; ?>">
+                    <div class="accordion-header">
+                        <span class="day-number"><?php echo esc_html($day['day_number']); ?></span>
+                        <h4 class="day-title"><?php echo esc_html($day['title']); ?></h4>
+                        <span class="accordion-icon"></span>
+                    </div>
+                    <div class="accordion-content" style="<?php echo $index === 0 ? 'display: block;' : ''; ?>">
+                        <?php if (!empty($day['description'])) : ?>
+                            <div class="day-description">
+                                <?php echo wpautop(esc_html($day['description'])); ?>
+                            </div>
+                        <?php endif; ?>
+                        <?php if (!empty($day['activities'])) : ?>
+                            <div class="day-activities">
+                                <strong><?php _e('Aktivitas:', 'mw-travel'); ?></strong>
+                                <?php echo wpautop(esc_html($day['activities'])); ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
                 </div>
-                <?php if (!empty($day['description'])) : ?>
-                    <div class="day-description">
-                        <?php echo wpautop(esc_html($day['description'])); ?>
-                    </div>
-                <?php endif; ?>
-                <?php if (!empty($day['activities'])) : ?>
-                    <div class="day-activities">
-                        <strong><?php _e('Aktivitas:', 'mw-travel'); ?></strong>
-                        <?php echo wpautop(esc_html($day['activities'])); ?>
-                    </div>
-                <?php endif; ?>
-            </div>
-        <?php endforeach; ?>
+            <?php endforeach; ?>
+        </div>
     </div>
     <?php
 }
