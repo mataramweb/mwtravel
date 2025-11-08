@@ -148,8 +148,10 @@ class MW_Travel_Plugin {
         global $post_type;
         
         if (('post.php' === $hook || 'post-new.php' === $hook) && 'mw_travel' === $post_type) {
+            // Enqueue WordPress media uploader
             wp_enqueue_media();
             
+            // Enqueue admin styles
             wp_enqueue_style(
                 'mw-travel-admin',
                 MW_TRAVEL_PLUGIN_URL . 'assets/css/admin.css',
@@ -157,17 +159,21 @@ class MW_Travel_Plugin {
                 MW_TRAVEL_VERSION
             );
             
+            // Enqueue admin scripts with proper dependencies
             wp_enqueue_script(
                 'mw-travel-admin',
                 MW_TRAVEL_PLUGIN_URL . 'assets/js/admin.js',
-                array('jquery', 'jquery-ui-sortable'),
+                array('jquery', 'jquery-ui-sortable', 'media-upload', 'media-views'),
                 MW_TRAVEL_VERSION,
                 true
             );
             
+            // Localize script data
             wp_localize_script('mw-travel-admin', 'mwTravelAdmin', array(
                 'confirmDelete' => __('Apakah Anda yakin ingin menghapus item ini?', 'mw-travel'),
-                'nonce' => wp_create_nonce('mw_travel_nonce')
+                'nonce' => wp_create_nonce('mw_travel_nonce'),
+                'mediaTitle' => __('Pilih atau Upload Gambar', 'mw-travel'),
+                'mediaButton' => __('Tambahkan ke Gallery', 'mw-travel')
             ));
         }
     }
