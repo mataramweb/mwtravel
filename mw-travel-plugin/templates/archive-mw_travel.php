@@ -18,7 +18,7 @@ get_header();
                     if (is_tax('mw_travel_category')) {
                         single_term_title();
                     } else {
-                        _e('Paket Travel', 'mw-travel');
+                        _e('Paket Tour', 'mw-travel');
                     }
                     ?>
                 </h1>
