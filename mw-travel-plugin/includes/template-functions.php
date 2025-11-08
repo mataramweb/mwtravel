@@ -169,17 +169,14 @@ function mw_travel_display_gallery() {
         return;
     }
     ?>
-    <div class="mw-travel-gallery">
-        <h3><?php _e('Gallery', 'mw-travel'); ?></h3>
-        <div class="gallery-grid">
+    <div class="mw-travel-gallery-carousel">
+        <div class="gallery-carousel">
             <?php foreach ($gallery_ids as $image_id) : ?>
                 <?php if ($image_id) : ?>
                     <?php $image = wp_get_attachment_image_src($image_id, 'large'); ?>
                     <?php if ($image) : ?>
-                        <div class="gallery-item">
-                            <a href="<?php echo esc_url(wp_get_attachment_url($image_id)); ?>" data-lightbox="travel-gallery">
-                                <img src="<?php echo esc_url($image[0]); ?>" alt="<?php echo esc_attr(get_post_meta($image_id, '_wp_attachment_image_alt', true)); ?>">
-                            </a>
+                        <div class="gallery-slide">
+                            <img src="<?php echo esc_url($image[0]); ?>" alt="<?php echo esc_attr(get_post_meta($image_id, '_wp_attachment_image_alt', true)); ?>">
                         </div>
                     <?php endif; ?>
                 <?php endif; ?>
