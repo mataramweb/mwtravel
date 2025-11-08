@@ -98,20 +98,50 @@ class MW_Travel_Plugin {
      */
     public function enqueue_frontend_assets() {
         if (is_singular('mw_travel') || is_post_type_archive('mw_travel')) {
+            // Slick Slider CSS
+            wp_enqueue_style(
+                'slick-slider',
+                'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css',
+                array(),
+                '1.8.1'
+            );
+            
+            wp_enqueue_style(
+                'slick-slider-theme',
+                'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css',
+                array(),
+                '1.8.1'
+            );
+            
             wp_enqueue_style(
                 'mw-travel-frontend',
                 MW_TRAVEL_PLUGIN_URL . 'assets/css/frontend.css',
-                array(),
+                array('slick-slider', 'slick-slider-theme'),
                 MW_TRAVEL_VERSION
+            );
+            
+            // Slick Slider JS
+            wp_enqueue_script(
+                'slick-slider',
+                'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js',
+                array('jquery'),
+                '1.8.1',
+                true
             );
             
             wp_enqueue_script(
                 'mw-travel-frontend',
                 MW_TRAVEL_PLUGIN_URL . 'assets/js/frontend.js',
-                array('jquery'),
+                array('jquery', 'slick-slider'),
                 MW_TRAVEL_VERSION,
                 true
             );
+            
+            // Localize script
+            wp_localize_script('mw-travel-frontend', 'mwTravelFrontend', array(
+                'ajaxurl' => admin_url('admin-ajax.php'),
+                'nonce' => wp_create_nonce('mw_travel_review_nonce')
+            ));
         }
     }
     
