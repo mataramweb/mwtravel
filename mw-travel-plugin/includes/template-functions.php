@@ -354,6 +354,11 @@ function mw_travel_get_star_rating($rating) {
  * Output Schema.org Product markup
  */
 function mw_travel_output_schema() {
+    // Check if class exists
+    if (!class_exists('MW_Travel_Reviews')) {
+        return;
+    }
+    
     global $post;
     
     $reviews_class = new MW_Travel_Reviews();
