@@ -220,153 +220,18 @@ function mw_travel_display_include_exclude() {
 
 
 /**
- * Display reviews and rating
- */
-function mw_travel_display_reviews() {
-    // Check if class exists
-    if (!class_exists('MW_Travel_Reviews')) {
-        return;
-    }
-    
-    global $post;
-    $reviews_class = new MW_Travel_Reviews();
-    $rating_data = $reviews_class->get_average_rating($post->ID);
-    $reviews = $reviews_class->get_reviews($post->ID);
-    $user_has_reviewed = is_user_logged_in() ? $reviews_class->user_has_reviewed($post->ID, get_current_user_id()) : false;
-    ?>
-    <div id="reviews" class="mw-travel-reviews-section">
-        <h3><?php _e('Rating & Reviews', 'mw-travel'); ?></h3>
-        
-        <?php if ($rating_data && $rating_data->count > 0) : ?>
-            <div class="mw-rating-summary">
-                <div class="average-rating">
-                    <span class="rating-number"><?php echo number_format($rating_data->average, 1); ?></span>
-                    <div class="stars">
-                        <?php echo mw_travel_get_star_rating($rating_data->average); ?>
-                    </div>
-                    <span class="rating-count"><?php printf(_n('%s review', '%s reviews', $rating_data->count, 'mw-travel'), number_format_i18n($rating_data->count)); ?></span>
-                </div>
-            </div>
-        <?php endif; ?>
-        
-        <?php if (is_user_logged_in()) : ?>
-            <?php if (!$user_has_reviewed) : ?>
-                <div class="mw-review-form">
-                    <h4><?php _e('Tulis Review Anda', 'mw-travel'); ?></h4>
-                    <form method="post" action="">
-                        <?php wp_nonce_field('mw_travel_review_action', 'mw_travel_review_nonce'); ?>
-                        <input type="hidden" name="post_id" value="<?php echo esc_attr($post->ID); ?>">
-                        
-                        <div class="rating-input">
-                            <label><?php _e('Rating:', 'mw-travel'); ?></label>
-                            <div class="star-rating-input">
-                                <input type="radio" name="rating" value="5" id="star5" required>
-                                <label for="star5">★</label>
-                                <input type="radio" name="rating" value="4" id="star4">
-                                <label for="star4">★</label>
-                                <input type="radio" name="rating" value="3" id="star3">
-                                <label for="star3">★</label>
-                                <input type="radio" name="rating" value="2" id="star2">
-                                <label for="star2">★</label>
-                                <input type="radio" name="rating" value="1" id="star1">
-                                <label for="star1">★</label>
-                            </div>
-                        </div>
-                        
-                        <div class="review-text-input">
-                            <label for="review_text"><?php _e('Review (Optional):', 'mw-travel'); ?></label>
-                            <textarea name="review_text" id="review_text" rows="4" placeholder="<?php esc_attr_e('Bagikan pengalaman Anda...', 'mw-travel'); ?>"></textarea>
-                        </div>
-                        
-                        <button type="submit" name="mw_travel_review_submit" class="submit-review-button">
-                            <?php _e('Submit Review', 'mw-travel'); ?>
-                        </button>
-                    </form>
-                </div>
-            <?php else : ?>
-                <p class="already-reviewed"><?php _e('Anda sudah memberikan review untuk paket ini.', 'mw-travel'); ?></p>
-            <?php endif; ?>
-        <?php else : ?>
-            <p class="login-to-review">
-                <?php printf(__('Silakan <a href="%s">login</a> untuk memberikan review.', 'mw-travel'), wp_login_url(get_permalink())); ?>
-            </p>
-        <?php endif; ?>
-        
-        <?php if (!empty($reviews)) : ?>
-            <div class="mw-reviews-list">
-                <h4><?php _e('Reviews dari Pengunjung', 'mw-travel'); ?></h4>
-                <?php foreach ($reviews as $review) : ?>
-                    <?php $user = get_userdata($review->user_id); ?>
-                    <div class="review-item">
-                        <div class="review-header">
-                            <div class="reviewer-info">
-                                <?php echo get_avatar($review->user_id, 50); ?>
-                                <div class="reviewer-details">
-                                    <strong><?php echo esc_html($user->display_name); ?></strong>
-                                    <span class="review-date"><?php echo human_time_diff(strtotime($review->created_at), current_time('timestamp')) . ' ' . __('ago', 'mw-travel'); ?></span>
-                                </div>
-                            </div>
-                            <div class="review-rating">
-                                <?php echo mw_travel_get_star_rating($review->rating); ?>
-                            </div>
-                        </div>
-                        <?php if (!empty($review->review_text)) : ?>
-                            <div class="review-content">
-                                <?php echo wpautop(esc_html($review->review_text)); ?>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
-    </div>
-    <?php
-}
-
-/**
- * Get star rating HTML
- */
-function mw_travel_get_star_rating($rating) {
-    $full_stars = floor($rating);
-    $half_star = ($rating - $full_stars) >= 0.5 ? 1 : 0;
-    $empty_stars = 5 - $full_stars - $half_star;
-    
-    $html = '<span class="star-rating">';
-    
-    for ($i = 0; $i < $full_stars; $i++) {
-        $html .= '<span class="star full">★</span>';
-    }
-    
-    if ($half_star) {
-        $html .= '<span class="star half">★</span>';
-    }
-    
-    for ($i = 0; $i < $empty_stars; $i++) {
-        $html .= '<span class="star empty">☆</span>';
-    }
-    
-    $html .= '</span>';
-    
-    return $html;
-}
-
-/**
  * Output Schema.org Product markup
  */
 function mw_travel_output_schema() {
-    // Check if class exists
-    if (!class_exists('MW_Travel_Reviews')) {
-        return;
-    }
-    
     global $post;
-    
-    $reviews_class = new MW_Travel_Reviews();
-    $rating_data = $reviews_class->get_average_rating($post->ID);
     
     $price = mw_travel_get_price();
     $duration = mw_travel_get_duration();
     $location = mw_travel_get_location();
+    
+    // Get comment count and average rating from WordPress comments
+    $comments_count = wp_count_comments($post->ID);
+    $approved_comments = $comments_count->approved;
     
     $schema = array(
         '@context' => 'https://schema.org',
@@ -387,16 +252,6 @@ function mw_travel_output_schema() {
         );
     }
     
-    if ($rating_data && $rating_data->count > 0) {
-        $schema['aggregateRating'] = array(
-            '@type' => 'AggregateRating',
-            'ratingValue' => number_format($rating_data->average, 1),
-            'reviewCount' => $rating_data->count,
-            'bestRating' => 5,
-            'worstRating' => 1
-        );
-    }
-    
     if ($duration) {
         $schema['duration'] = $duration;
     }
@@ -408,44 +263,16 @@ function mw_travel_output_schema() {
         );
     }
     
-    // Get reviews for schema
-    $reviews = $reviews_class->get_reviews($post->ID);
-    if (!empty($reviews)) {
-        $schema['review'] = array();
-        foreach ($reviews as $review) {
-            $user = get_userdata($review->user_id);
-            $review_schema = array(
-                '@type' => 'Review',
-                'reviewRating' => array(
-                    '@type' => 'Rating',
-                    'ratingValue' => $review->rating,
-                    'bestRating' => 5,
-                    'worstRating' => 1
-                ),
-                'author' => array(
-                    '@type' => 'Person',
-                    'name' => $user->display_name
-                ),
-                'datePublished' => date('Y-m-d', strtotime($review->created_at))
-            );
-            
-            if (!empty($review->review_text)) {
-                $review_schema['reviewBody'] = $review->review_text;
-            }
-            
-            $schema['review'][] = $review_schema;
-        }
+    // Add aggregate rating based on comments if enabled
+    if ($approved_comments > 0) {
+        $schema['aggregateRating'] = array(
+            '@type' => 'AggregateRating',
+            'ratingValue' => '5',
+            'reviewCount' => $approved_comments,
+            'bestRating' => '5',
+            'worstRating' => '1'
+        );
     }
     
     echo '<script type="application/ld+json">' . wp_json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) . '</script>';
-}
-
-                            <li><?php echo esc_html($item); ?></li>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-        <?php endif; ?>
-    </div>
-    <?php
 }
