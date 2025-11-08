@@ -216,9 +216,14 @@ function mw_travel_activate() {
     // Register post type and taxonomy
     require_once MW_TRAVEL_PLUGIN_DIR . 'includes/class-custom-post-type.php';
     require_once MW_TRAVEL_PLUGIN_DIR . 'includes/class-taxonomy.php';
+    require_once MW_TRAVEL_PLUGIN_DIR . 'includes/class-reviews.php';
     
     $cpt = new MW_Travel_Custom_Post_Type();
     $tax = new MW_Travel_Taxonomy();
+    $reviews = new MW_Travel_Reviews();
+    
+    // Create reviews table
+    $reviews->create_table();
     
     // Flush rewrite rules
     flush_rewrite_rules();
