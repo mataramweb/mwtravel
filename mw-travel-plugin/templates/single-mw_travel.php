@@ -5,6 +5,11 @@
  */
 
 get_header();
+
+// Output Schema markup
+if (function_exists('mw_travel_output_schema')) {
+    mw_travel_output_schema();
+}
 ?>
 
 <div id="primary" class="content-area">
@@ -18,6 +23,7 @@ get_header();
             $duration = mw_travel_get_duration();
             $location = mw_travel_get_location();
             $categories = get_the_terms(get_the_ID(), 'mw_travel_category');
+            $gallery_ids = mw_travel_get_gallery();
             ?>
             
             <article id="post-<?php the_ID(); ?>" <?php post_class('mw-travel-single'); ?>>
@@ -42,6 +48,11 @@ get_header();
                     </div>
                 <?php endif; ?>
                 
+                <!-- Gallery Carousel below Featured Image -->
+                <?php if (!empty($gallery_ids)) : ?>
+                    <?php mw_travel_display_gallery(); ?>
+                <?php endif; ?>
+                
                 <!-- Travel Details -->
                 <div class="mw-travel-details-section">
                     <?php mw_travel_display_details(); ?>
@@ -52,14 +63,16 @@ get_header();
                     <?php the_content(); ?>
                 </div>
                 
-                <!-- Itinerary -->
+                <!-- Itinerary Accordion -->
                 <?php mw_travel_display_itinerary(); ?>
                 
                 <!-- Include/Exclude -->
                 <?php mw_travel_display_include_exclude(); ?>
                 
-                <!-- Gallery -->
-                <?php mw_travel_display_gallery(); ?>
+                <!-- Reviews & Rating -->
+                <?php if (function_exists('mw_travel_display_reviews')) : ?>
+                    <?php mw_travel_display_reviews(); ?>
+                <?php endif; ?>
                 
                 <!-- Contact/Booking Section -->
                 <div class="mw-travel-booking-section">
