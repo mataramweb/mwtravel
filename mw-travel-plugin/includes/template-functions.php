@@ -68,7 +68,7 @@ function mw_travel_get_include($post_id = null) {
         $post_id = get_the_ID();
     }
     $include = get_post_meta($post_id, '_mw_travel_include', true);
-    return !empty($include) ? explode('\n', $include) : array();
+    return !empty($include) ? explode("\n", $include) : array();
 }
 
 /**
@@ -79,7 +79,7 @@ function mw_travel_get_exclude($post_id = null) {
         $post_id = get_the_ID();
     }
     $exclude = get_post_meta($post_id, '_mw_travel_exclude', true);
-    return !empty($exclude) ? explode('\n', $exclude) : array();
+    return !empty($exclude) ? explode("\n", $exclude) : array();
 }
 
 /**
@@ -217,7 +217,15 @@ function mw_travel_display_include_exclude() {
                 <ul>
                     <?php foreach ($exclude as $item) : ?>
                         <?php if (trim($item)) : ?>
-
+                            <li><?php echo esc_html($item); ?></li>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+    </div>
+    <?php
+}
 
 /**
  * Output Schema.org Product markup
@@ -229,7 +237,7 @@ function mw_travel_output_schema() {
     $duration = mw_travel_get_duration();
     $location = mw_travel_get_location();
     
-    // Get comment count and average rating from WordPress comments
+    // Get comment count from WordPress comments
     $comments_count = wp_count_comments($post->ID);
     $approved_comments = $comments_count->approved;
     
