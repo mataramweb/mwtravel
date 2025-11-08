@@ -45,7 +45,7 @@ class MW_Travel_Taxonomy {
             'show_ui'               => true,
             'show_admin_column'     => true,
             'query_var'             => true,
-            'rewrite'               => array('slug' => 'kategori-travel'),
+            'rewrite'               => array('slug' => 'tour-category'),
             'show_in_rest'          => true,
         );
         
