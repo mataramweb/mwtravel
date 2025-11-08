@@ -209,30 +209,16 @@ add_action('plugins_loaded', 'mw_travel_plugin_init', 5);
  */
 register_activation_hook(__FILE__, 'mw_travel_activate');
 function mw_travel_activate() {
-    // Don't do anything if already activated
-    if (get_option('mw_travel_activated')) {
-        return;
-    }
-    
     // Include class files safely
     $includes = array(
         'class-custom-post-type.php',
-        'class-taxonomy.php',
-        'class-reviews.php'
+        'class-taxonomy.php'
     );
     
     foreach ($includes as $file) {
         $filepath = plugin_dir_path(__FILE__) . 'includes/' . $file;
         if (file_exists($filepath)) {
             require_once $filepath;
-        }
-    }
-    
-    // Create database table for reviews
-    if (class_exists('MW_Travel_Reviews')) {
-        $reviews = new MW_Travel_Reviews();
-        if (method_exists($reviews, 'create_table')) {
-            $reviews->create_table();
         }
     }
     
@@ -247,9 +233,6 @@ function mw_travel_activate() {
     
     // Flush rewrite rules
     flush_rewrite_rules();
-    
-    // Mark as activated
-    update_option('mw_travel_activated', true);
 }
 
 /**
