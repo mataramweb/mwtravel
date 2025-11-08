@@ -213,17 +213,24 @@ mw_travel_plugin_init();
  */
 register_activation_hook(__FILE__, 'mw_travel_activate');
 function mw_travel_activate() {
-    // Register post type and taxonomy
-    require_once MW_TRAVEL_PLUGIN_DIR . 'includes/class-custom-post-type.php';
-    require_once MW_TRAVEL_PLUGIN_DIR . 'includes/class-taxonomy.php';
-    require_once MW_TRAVEL_PLUGIN_DIR . 'includes/class-reviews.php';
+    // Include required files
+    if (!class_exists('MW_Travel_Custom_Post_Type')) {
+        require_once plugin_dir_path(__FILE__) . 'includes/class-custom-post-type.php';
+    }
+    if (!class_exists('MW_Travel_Taxonomy')) {
+        require_once plugin_dir_path(__FILE__) . 'includes/class-taxonomy.php';
+    }
+    if (!class_exists('MW_Travel_Reviews')) {
+        require_once plugin_dir_path(__FILE__) . 'includes/class-reviews.php';
+    }
     
+    // Create reviews table first
+    $reviews = new MW_Travel_Reviews();
+    $reviews->create_table();
+    
+    // Register post type and taxonomy
     $cpt = new MW_Travel_Custom_Post_Type();
     $tax = new MW_Travel_Taxonomy();
-    $reviews = new MW_Travel_Reviews();
-    
-    // Create reviews table
-    $reviews->create_table();
     
     // Flush rewrite rules
     flush_rewrite_rules();
