@@ -110,8 +110,8 @@ get_header();
         <?php else : ?>
             
             <div class="no-results">
-                <h2><?php _e('Tidak ada paket travel ditemukan', 'mw-travel'); ?></h2>
-                <p><?php _e('Maaf, belum ada paket travel yang tersedia saat ini.', 'mw-travel'); ?></p>
+                <h2><?php _e('Tidak ada paket tour ditemukan', 'mw-travel'); ?></h2>
+                <p><?php _e('Maaf, belum ada paket tour yang tersedia saat ini.', 'mw-travel'); ?></p>
             </div>
             
         <?php endif; ?>
