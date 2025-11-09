@@ -191,3 +191,108 @@
         grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
     }
 }
+
+/* Transport Specifications Styles */
+.mw-transport-specifications-wrapper {
+    padding: 10px 0;
+}
+
+#mw-specifications-list {
+    margin-bottom: 15px;
+}
+
+.mw-specification-item {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.mw-specification-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #ddd;
+}
+
+.mw-specification-handle {
+    cursor: move;
+    color: #666;
+    font-size: 20px;
+}
+
+.mw-specification-header h4 {
+    flex: 1;
+    margin: 0;
+    font-size: 16px;
+}
+
+.mw-remove-specification {
+    background: #dc3232;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.mw-remove-specification:hover {
+    background: #a00;
+}
+
+.mw-specification-content p {
+    margin-bottom: 10px;
+}
+
+.mw-specification-content label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.mw-specification-item.ui-sortable-helper {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+#mw-add-specification {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.spec-title-display {
+    color: #0073aa;
+    font-weight: normal;
+}
+
+/* Transport Price */
+.mw-transport-price-wrapper p {
+    margin-bottom: 15px;
+}
+
+.mw-transport-price-wrapper label {
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+.mw-transport-price-wrapper .description {
+    display: block;
+    margin-top: 5px;
+    font-style: italic;
+    color: #666;
+}
+
+/* Transport Include List */
+.mw-transport-list-wrapper {
+    padding: 10px 0;
+}
+
+.mw-add-transport-include {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 10px;
+}
