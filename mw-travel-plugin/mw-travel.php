@@ -101,7 +101,7 @@ class MW_Travel_Plugin {
      * Enqueue frontend assets
      */
     public function enqueue_frontend_assets() {
-        if (is_singular('mw_travel') || is_post_type_archive('mw_travel')) {
+        if (is_singular('mw_travel') || is_post_type_archive('mw_travel') || is_singular('mw_transport') || is_post_type_archive('mw_transport')) {
             // Slick Slider CSS
             wp_enqueue_style(
                 'slick-slider',
