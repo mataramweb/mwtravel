@@ -202,6 +202,20 @@ class MW_Travel_Plugin {
             }
         }
         
+        if (is_singular('mw_transport')) {
+            $custom_template = MW_TRAVEL_PLUGIN_DIR . 'templates/single-mw_transport.php';
+            if (file_exists($custom_template)) {
+                return $custom_template;
+            }
+        }
+        
+        if (is_post_type_archive('mw_transport')) {
+            $custom_template = MW_TRAVEL_PLUGIN_DIR . 'templates/archive-mw_transport.php';
+            if (file_exists($custom_template)) {
+                return $custom_template;
+            }
+        }
+        
         return $template;
     }
 }
