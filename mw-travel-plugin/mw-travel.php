@@ -57,6 +57,8 @@ class MW_Travel_Plugin {
         require_once MW_TRAVEL_PLUGIN_DIR . 'includes/class-custom-post-type.php';
         require_once MW_TRAVEL_PLUGIN_DIR . 'includes/class-meta-boxes.php';
         require_once MW_TRAVEL_PLUGIN_DIR . 'includes/class-taxonomy.php';
+        require_once MW_TRAVEL_PLUGIN_DIR . 'includes/class-transport-post-type.php';
+        require_once MW_TRAVEL_PLUGIN_DIR . 'includes/class-transport-meta-boxes.php';
         require_once MW_TRAVEL_PLUGIN_DIR . 'includes/template-functions.php';
     }
     
