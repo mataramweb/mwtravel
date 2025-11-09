@@ -54,6 +54,23 @@
             }
         });
         
+        // Transport Specifications Accordion
+        $('.spec-header').on('click', function() {
+            const $item = $(this).closest('.spec-item');
+            const $content = $item.find('.spec-content');
+            const isActive = $item.hasClass('active');
+            
+            // Close all spec items
+            $('.spec-item').removeClass('active');
+            $('.spec-content').slideUp(300);
+            
+            // Open clicked item if it wasn't active
+            if (!isActive) {
+                $item.addClass('active');
+                $content.slideDown(300);
+            }
+        });
+        
         // Star Rating Hover Effect (for display)
         $('.star-rating-input label').on('mouseenter', function() {
             const $this = $(this);
