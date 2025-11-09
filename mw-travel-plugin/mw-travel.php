@@ -87,6 +87,12 @@ class MW_Travel_Plugin {
         // Initialize taxonomy
         new MW_Travel_Taxonomy();
         
+        // Initialize transport post type
+        new MW_Transport_Post_Type();
+        
+        // Initialize transport meta boxes
+        new MW_Transport_Meta_Boxes();
+        
         // Load text domain
         load_plugin_textdomain('mw-travel', false, dirname(plugin_basename(__FILE__)) . '/languages');
     }
