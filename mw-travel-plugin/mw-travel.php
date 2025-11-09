@@ -153,9 +153,7 @@ class MW_Travel_Plugin {
      * Enqueue admin assets
      */
     public function enqueue_admin_assets($hook) {
-        global $post_type;
-        
-        if (('post.php' === $hook || 'post-new.php' === $hook) && 'mw_travel' === $post_type) {
+        global $post_type;\n        \n        if (('post.php' === $hook || 'post-new.php' === $hook) && ('mw_travel' === $post_type || 'mw_transport' === $post_type)) {
             // Enqueue WordPress media uploader
             wp_enqueue_media();
             
