@@ -238,7 +238,8 @@ function mw_travel_activate() {
     // Include class files safely
     $includes = array(
         'class-custom-post-type.php',
-        'class-taxonomy.php'
+        'class-taxonomy.php',
+        'class-transport-post-type.php'
     );
     
     foreach ($includes as $file) {
@@ -255,6 +256,10 @@ function mw_travel_activate() {
     
     if (class_exists('MW_Travel_Taxonomy')) {
         $tax = new MW_Travel_Taxonomy();
+    }
+    
+    if (class_exists('MW_Transport_Post_Type')) {
+        $transport = new MW_Transport_Post_Type();
     }
     
     // Flush rewrite rules
