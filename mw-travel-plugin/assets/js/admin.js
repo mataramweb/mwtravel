@@ -53,6 +53,60 @@
             });
         }
         
+        // === TRANSPORT SPECIFICATIONS ===
+        let specificationIndex = $('#mw-specifications-list .mw-specification-item').length;
+        
+        // Add new specification
+        $('#mw-add-specification').on('click', function(e) {
+            e.preventDefault();
+            
+            const template = $('#mw-specification-template').html();
+            const newItem = template.replace(/{{INDEX}}/g, specificationIndex);
+            
+            $('#mw-specifications-list').append(newItem);
+            specificationIndex++;
+        });\n        \n        // Remove specification
+        $(document).on('click', '.mw-remove-specification', function(e) {
+            e.preventDefault();
+            \n            if (confirm(mwTravelAdmin.confirmDelete)) {
+                $(this).closest('.mw-specification-item').fadeOut(300, function() {
+                    $(this).remove();
+                });
+            }
+        });
+        
+        // Update spec title display
+        $(document).on('input', '.spec-title-input', function() {
+            const value = $(this).val();
+            $(this).closest('.mw-specification-item').find('.spec-title-display').text(value ? ': ' + value : '');
+        });
+        
+        // Make specifications sortable
+        if ($.fn.sortable) {
+            $('#mw-specifications-list').sortable({
+                handle: '.mw-specification-handle',
+                placeholder: 'mw-specification-placeholder',
+                tolerance: 'pointer',
+                cursor: 'move',
+                opacity: 0.7
+            });
+        }
+        
+        // Transport include list
+        $('.mw-add-transport-include').on('click', function(e) {
+            e.preventDefault();
+            
+            const itemHtml = '<div class=\"mw-list-item\">' +
+                '<input type=\"text\" name=\"mw_transport_include[]\" class=\"widefat\" placeholder=\"Masukkan item yang termasuk\">' +
+                '<button type=\"button\" class=\"button mw-remove-list-item\">' +
+                '<span class=\"dashicons dashicons-no\"></span>' +
+                '</button>' +
+                '</div>';
+            
+            $('#mw-transport-include-list').append(itemHtml);
+        });
+        // === END TRANSPORT SPECIFICATIONS ===
+        
         // Gallery functionality
         let galleryFrame;
         
