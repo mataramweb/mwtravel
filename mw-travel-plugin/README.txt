@@ -1,5 +1,5 @@
 === MW Travel ===
-Contributors: Mataram Web
+Contributors: Mataram Web https://mataramweb.com
 Tags: travel, tour, custom post type, itinerary, travel agency
 Requires at least: 5.0
 Tested up to: 6.4
